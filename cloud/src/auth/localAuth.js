@@ -7,6 +7,7 @@
  */
 
 import { getDb } from '../db/index.js';
+import { getUserById } from '../db/users.js';
 import { config } from '../config.js';
 
 const hasOAuth = !!(config.github.clientId || config.google.clientId);
@@ -51,8 +52,29 @@ export function getLocalAuth() {
   const db = getDb();
   const row = db.prepare('SELECT * FROM local_auth WHERE id = 1').get();
   if (!row) return null;
+
+  // Integrity check: the stored cloud_user_id must still resolve to a live user.
+  // A user row can be removed (e.g. guest-merge or dedup cleanup) while this
+  // pointer is left dangling, which silently breaks browser/agent userId matching.
+  let cloudUserId = row.cloud_user_id;
+  if (!getUserById(cloudUserId)) {
+    // Self-heal: relink to a surviving user by email (the same key upsertUser
+    // dedups on), then persist so we don't re-resolve every call.
+    const healed = row.email
+      ? db.prepare('SELECT id FROM users WHERE email = ?').get(row.email)
+      : null;
+    if (!healed) {
+      // No live user to point at — return null so callers fall through to
+      // cookie/guest auth instead of binding to a non-existent identity.
+      return null;
+    }
+    db.prepare("UPDATE local_auth SET cloud_user_id = ?, updated_at = datetime('now') WHERE id = 1")
+      .run(healed.id);
+    cloudUserId = healed.id;
+  }
+
   return {
-    cloudUserId: row.cloud_user_id,
+    cloudUserId,
     cloudToken: row.cloud_token,
     instanceId: row.instance_id,
     displayName: row.display_name,
