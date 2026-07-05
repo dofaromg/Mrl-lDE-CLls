@@ -92,7 +92,7 @@ process.env.PATH = [...new Set([...EXTRA_PATHS, ...(process.env.PATH || '').spli
 // Find the node binary that matches the ABI of the cloud's native modules.
 function findNode() {
   try {
-    const recorded = readFileSync('/tmp/49agents-node-path.txt', 'utf8').trim();
+    const recorded = readFileSync('/tmp/mrl-ai-system-node-path.txt', 'utf8').trim();
     if (recorded) { execFileSync(recorded, ['--version'], { stdio: 'ignore' }); return recorded; }
   } catch { /* fall through */ }
 
@@ -445,10 +445,10 @@ function updateTray() {
                  ['starting', 'stopping'].includes(state.agent);
 
   const menu = Menu.buildFromTemplate([
-    { label: '49Agents', enabled: false },
+    { label: 'MRL_AI_system', enabled: false },
     { label: `Cloud: ${state.cloud}  ·  Agent: ${state.agent}`, enabled: false },
     { type: 'separator' },
-    { label: 'Open 49Agents', click: openMainWindow, enabled: isRunning },
+    { label: 'Open MRL_AI_system', click: openMainWindow, enabled: isRunning },
     { label: 'Control Panel', click: openDashboard },
     { type: 'separator' },
     { label: 'Restart', click: () => restartAll(), enabled: !isBusy },
@@ -469,7 +469,7 @@ function updateTray() {
 
 function createTray() {
   tray = new Tray(makeTrayIcon());
-  tray.setToolTip('49Agents');
+  tray.setToolTip('MRL_AI_system');
   tray.on('click', openDashboard);
   updateTray();
 }
@@ -519,7 +519,7 @@ function openMainWindow() {
     height: 900,
     minWidth: 800,
     minHeight: 600,
-    title: '49Agents',
+    title: 'MRL_AI_system',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -576,7 +576,7 @@ app.whenReady().then(async () => {
     await dialog.showMessageBox({
       type: 'error',
       title: 'Missing dependencies',
-      message: `49Agents requires ${missing.join(' and ')} to be installed.`,
+      message: `MRL_AI_system requires ${missing.join(' and ')} to be installed.`,
       detail: `Install with Homebrew:\n\n  brew install ${missing.join(' ')}\n\nThen relaunch the app.`,
       buttons: ['Quit'],
     });
@@ -604,7 +604,7 @@ app.whenReady().then(async () => {
     await dialog.showMessageBox({
       type: 'error',
       title: 'Failed to start',
-      message: 'Could not start the 49Agents server.',
+      message: 'Could not start the MRL_AI_system server.',
       detail: err.message,
       buttons: ['Quit'],
     });
