@@ -1,7 +1,7 @@
 {
-  "name": "49agents-desktop",
+  "name": "mrl_ai_system-desktop",
   "version": "0.3.6",
-  "description": "49Agents desktop app for macOS",
+  "description": "MRL_AI_system desktop app for macOS",
   "type": "module",
   "main": "src/main.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "release": "electron-builder --mac --publish always"
   },
   "build": {
-    "appId": "com.49agents.desktop",
-    "productName": "49Agents",
+    "appId": "com.mrl.ai.system.desktop",
+    "productName": "MRL_AI_system",
     "icon": "assets/icon.icns",
     "directories": {
       "output": "dist"
@@ -68,7 +68,7 @@
       ]
     },
     "dmg": {
-      "title": "49Agents"
+      "title": "MRL_AI_system"
     },
     "publish": {
       "provider": "github",

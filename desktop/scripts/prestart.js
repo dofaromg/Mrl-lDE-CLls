@@ -12,7 +12,7 @@ const root = join(__dirname, '..', '..');
 const npmBin = join(dirname(process.execPath), 'npm');
 
 // Record the node path for main.js to use when spawning cloud/agent.
-writeFileSync('/tmp/49agents-node-path.txt', process.execPath);
+writeFileSync('/tmp/mrl-ai-system-node-path.txt', process.execPath);
 process.stdout.write(`[prestart] Using node: ${process.execPath}\n`);
 
 for (const dir of ['cloud', 'agent']) {
